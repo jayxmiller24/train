@@ -11,7 +11,7 @@ $("#add-train-btn").on("click", function (event) {
     var trainFrequency = $("#frequency-input").val().trim();
    
 
-    // Creates local "temporary" object for holding employee data
+   
     var newTrain = {
         name: trainName,
         destination: trainDestination,
@@ -19,14 +19,8 @@ $("#add-train-btn").on("click", function (event) {
         firstTrainTime: firstTrain,
     };
 
-    // Uploads employee data to the database
+    
     database.ref().push(newTrain);
-
-    // Logs everything to console
-    console.log(newTrain.name);
-    console.log(newTrain.destination);
-    console.log(newTrain.frequency);
-    console.log(newTrain.firstTrainTime);
 
     alert("Train successfully added");
 
@@ -37,11 +31,11 @@ $("#add-train-btn").on("click", function (event) {
     $("#first-train-input").val("");
 });
 
-// 3. Create Firebase event for adding employee to the database and a row in the html when a user adds an entry
+
 database.ref().on("child_added", function (childSnapshot) {
     console.log(childSnapshot.val());
 
-    // Store everything into a variable.
+    
     var trainName = childSnapshot.val().name;
     var trainDestination = childSnapshot.val().destination;
     var trainFrequency = childSnapshot.val().frequency;
@@ -49,19 +43,13 @@ database.ref().on("child_added", function (childSnapshot) {
     var min = childSnapshot.val().min;
     var next = childSnapshot.val().next;
 
-    // Employee Info
-    console.log(trainName);
-    console.log(trainDestination);
-    console.log(trainFrequency);
-    console.log(firstTrain);
 
-    // Prettify the employee start
+    
     var trainStartPretty = moment.unix(firstTrain).format("hh:mm a");
 
-    // THE MATH!
-    //subtracts the first train time back a year to ensure it's before current time.
+    
     var firstTrainConverted = moment(firstTrain, "hh:mm").subtract("1, years");
-    // the time difference between current time and the first train
+    /
     var difference = currentTime.diff(moment(firstTrainConverted), "minutes");
     var remainder = difference % trainFrequency;
     var minUntilTrain = trainFrequency - remainder;
@@ -75,19 +63,17 @@ database.ref().on("child_added", function (childSnapshot) {
         min: minUntilTrain,
         next: nextTrain
     }
-  console.log(newTrain);
+  
 
-    // Create the new row
+    
     var newRow = $("<tr>").append(
         $("<td>").text(trainName),
         $("<td>").text(trainDestination),
         $("<td>").text(trainFrequency),
-        // $("<td>").text(trainStartPretty),
-        // $("<td>").text(firstTrain),
         $("<td>").text(nextTrain),
         $("<td>").text(minUntilTrain),
     );
 
-    // Append the new row to the table
+    
     $("#train-table > tbody").append(newRow);
 });

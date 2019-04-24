@@ -49,7 +49,7 @@ database.ref().on("child_added", function (childSnapshot) {
 
     
     var firstTrainConverted = moment(firstTrain, "hh:mm").subtract("1, years");
-    /
+    
     var difference = currentTime.diff(moment(firstTrainConverted), "minutes");
     var remainder = difference % trainFrequency;
     var minUntilTrain = trainFrequency - remainder;
